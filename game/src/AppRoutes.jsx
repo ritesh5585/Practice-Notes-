@@ -3,24 +3,28 @@ import Home from "./pages/Home";
 import Favourite from "./pages/Favourite";
 import Games from "./pages/Games";
 import MainLayout from "./layout/MainLayout";
+import { gameLoader } from "./service/GameLoader";
 
 export const AppRouter = createBrowserRouter([
-    {
-        path: "/",
-        element: <MainLayout/>,
-        children: [
-            {
+  {
+    path: "/",
+    element: <MainLayout />,
+    hydrateFallbackElement: <p>Loading....</p>,
+
+    children: [
+      {
         index: true,
-        element: <Home/>
-    },
-    {
+        element: <Home />,
+        loader: gameLoader,
+      },
+      {
         path: "favourite",
-        element: <Favourite/>
-    },
-    {
+        element: <Favourite />,
+      },
+      {
         path: "games",
-        element: <Games/>
-    }
-        ]
-    }
-])
+        element: <Games />,
+      },
+    ],
+  },
+]);
