@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import api from "../config/api";
+import Buttons from "../Components/Buttons";
 
 const Home = () => {
   const getGames = async () => {
@@ -19,7 +20,23 @@ const Home = () => {
     getGames();
   }, []);
 
-  return <div className=" text-2xl">Home</div>;
+  return (
+    <div className=" text-xl">
+      <div className="w-full min-h-screen text-white p-5">
+        <div className="">
+          <h1 className="text-5xl font-bold mb-4 tracking-tight">
+            Explore the Metaverse
+          </h1>
+          <p className="text-xl font-light w-[45%] leading-none">
+            Discover your next obsession from our meticulously curated database
+            of the world's most legendary titles.
+          </p>
+        </div>
+        <Buttons />
+        <div className="w-full flex flex-wrap gap-4"></div>
+      </div>
+    </div>
+  );
 };
 
 export default Home;

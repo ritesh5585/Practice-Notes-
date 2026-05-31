@@ -28,7 +28,7 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search games..."
-              className="bg-neutral-900 text-white px-4 py-2 rounded w-full border-1 rounded-4xl outline-0"
+              className="bg-neutral-900 text-white px-4 py-2 rounded w-full outline-0"
             />
           </div>
           <User size={20} />
