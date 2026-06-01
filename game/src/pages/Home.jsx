@@ -2,8 +2,12 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import api from "../config/api";
 import Buttons from "../Components/Buttons";
+import Card from "../Components/Card";
+import { useLoaderData } from "react-router";
 
 const Home = () => {
+  const { data } = useLoaderData();
+
   const getGames = async () => {
     try {
       const response = await api.get("/games");
@@ -33,7 +37,11 @@ const Home = () => {
           </p>
         </div>
         <Buttons />
-        <div className="w-full flex flex-wrap gap-4"></div>
+        <div className="w-full flex flex-wrap gap-4">
+          {data.results.map((items) => (
+            <Card items={items} key={items.id} />
+          ))}
+        </div>
       </div>
     </div>
   );
