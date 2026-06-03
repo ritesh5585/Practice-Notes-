@@ -1,6 +1,4 @@
-import axios from "axios";
-import React, { useEffect } from "react";
-import api from "../config/api";
+import React from "react";
 import Buttons from "../Components/Buttons";
 import Card from "../Components/Card";
 import { useLoaderData } from "react-router";
@@ -8,36 +6,20 @@ import { useLoaderData } from "react-router";
 const Home = () => {
   const { data } = useLoaderData();
 
-  const getGames = async () => {
-    try {
-      const response = await api.get("/games");
-      console.log(response);
-    } catch (error) {
-      console.log("MESSAGE:", error.message);
-      console.log("RESPONSE:", error.response);
-      console.log("STATUS:", error.response?.status);
-      console.log("DATA:", error.response?.data);
-    }
-  };
-
-  useEffect(() => {
-    getGames();
-  }, []);
-
   return (
     <div className=" text-xl">
       <div className="w-full min-h-screen text-white p-5">
         <div className="">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
             Explore the Metaverse
           </h1>
-          <p className="text-xl font-light w-[45%] leading-none">
+          <p className="text-lg md:text-xl font-light w-full md:w-[60%] lg:w-[45%] text-gray-300">
             Discover your next obsession from our meticulously curated database
             of the world's most legendary titles.
           </p>
         </div>
         <Buttons />
-        <div className="w-full flex flex-wrap gap-4">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8 pb-10">
           {data.results.map((items) => (
             <Card items={items} key={items.id} />
           ))}

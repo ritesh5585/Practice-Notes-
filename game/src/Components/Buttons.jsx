@@ -10,11 +10,11 @@ const Buttons = () => {
   ];
 
   return (
-    <div className="mt-20 flex gap-5">
+    <div className="mt-10 md:mt-16 flex gap-3 overflow-x-auto pb-4 scrollbar-hide flex-wrap sm:flex-nowrap">
       {title.map((items, idx) => (
         <button
           key={idx}
-          className="p-1 active:bg-blue-600 hover:bg-[#3a3a3a] transition-colors cursor-pointer px-6 rounded-full bg-[#262626]"
+          className="whitespace-nowrap px-6 py-2 active:scale-95 hover:bg-white hover:text-black transition-all cursor-pointer rounded-full bg-[#2a2a2a] border border-gray-700 text-sm font-medium"
         >
           {items}
         </button>
