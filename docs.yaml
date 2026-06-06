@@ -1,0 +1,1723 @@
+# Scope 
+scope means where you can use  your variables and functions you created.
+
+mainly there are three type of scope : global scope,block scope and functional scope.
+
+functional scope: you can use the variable and functions is  with in the function only where it is defined
+
+ function abcd(){
+   var a = 12
+ }
+
+global scope : whenever any function and varialbe is declared outside of any function means declared in global space.
+you can use that variable and function in any where in the code.
+
+ let b =12;
+
+block scope {} : whenever any function and variable defined with in a block and we can use that inside the block only that is called block scope.
+ if(10<45){
+   let c=45
+ }
+
+
+
+
+# execution context 
+
+ js sabse pahle jaise hi aapka function dekhta hai sabse pahle js banaata hai execution context, ye ek process hai jo ki do different
+  phase mein chalta hai, one is memory creation phase and another one is code execution phase. this is a abstract.its a hypothetical scenario.
+
+ function abcd(){
+   var a = 12;
+   var b = 13;
+   let c= 14;
+
+   ...some code writtn...
+}
+
+
+  
+📘 Execution Context & Functions (Concise Notes)
+
+🔹 Execution Context
+Every JS code runs inside an execution context.
+Each context has 2 phases:
+1. Creation Phase
+Memory is allocated.
+var variables → initialized with undefined.
+let & const → allocated but remain uninitialized (TDZ). 
+Function declarations → full function loaded into memory.
+
+2. Execution Phase
+Code runs line by line.
+Variables get actual values.
+
+
+
+🔹 Types of Execution Context
+1.Global Execution Context (GEC) → created when JS starts.
+2.Function Execution Context (FEC) → created whenever a fun2.ction is called.
+
+
+🔹 Call Stack
+Global Execution Context (GEC) → created when JS starts.
+Function Execution Context (FEC) → created whenever a function is called.
+
+
+🔹 Functions & Hoisting.
+1. Function Declaration
+greet(); // ✅ Works
+function greet() {
+  console.log("Hello!");
+}
+Fully hoisted to memory.
+Can be used before or after definition.
+
+
+
+
+2. Function Expression with var
+greet(); // ❌ TypeError: greet is not a function
+var greet = function() {
+  console.log("Hello!");
+};
+var is hoisted as undefined.
+Function assigned only during execution phase.
+function Expression is not hoisted.
+
+
+
+3. Function Expression with let / const
+greet(); // ❌ ReferenceError
+let greet = function() {
+  console.log("Hello!");
+};
+In TDZ (Temporal Dead Zone) until execution reaches that line.
+Cannot be accessed before initialization.
+
+
+
+Example[advanced] :
+for (var i = 1; i <= 3; i++) {
+  setTimeout(function() {
+    console.log("var i:", i);
+  }, i * 1000);
+}
+
+for (let j = 1; j <= 3; j++) {
+  setTimeout(function() {
+    console.log("let j:", j);
+  }, j * 1000);
+}
+     
+guess the output ?
+var is function-scoped, not block-scoped.
+Matlab poore loop mein sirf ek hi variable i banta hai (shared).
+
+
+let is block-scoped.
+Matlab har iteration mein naya variable j create hota hai execution context ke andar.
+(captured in closure).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Lexical scope vs dynamic scope
+
+ Lexical scoping: A variable is accessible based on its placement in the source code, not from where it is called.
+ lexically means physically
+
+ function abcd(){
+     let a=12;   
+     if(true){
+     console.log(a);
+   }
+ }
+
+  Dynamic scoping: The value you get depends on WHERE you are calling from. There is not such concept of dynamic scoping exists, if there is a dynamic scoping
+  then the ans would be.
+
+ let a = 13;
+
+ function abcd(){   
+  console.log(a);
+ }
+
+ function defg(){
+   let a = 15;
+   abcd()
+ }
+
+ defg() 
+
+
+
+  If JavaScript had dynamic scoping (it doesn't, but imagine):
+
+ let x = "global";
+
+ function outer() {
+     let x = "outer";
+     inner();  Called from outer
+ }
+
+ function inner() {
+     console.log(x);  In dynamic scoping, this would look at WHERE inner was called from
+ }
+
+ function another() {
+     let x = "another";
+     inner();  Called from another
+ }
+
+  In dynamic scoping:
+ outer();    Would print "outer" (because inner was called from outer)
+ another();  Would print "another" (because inner was called from another)
+ inner();    Would print "global" (because inner was called from global scope)
+
+
+
+
+
+
+# Closure defition and how variable are preserved
+(when inner function use outer function variable)
+ Closure : whenever a function return another function, and child function use parent function's variable , child function always return with parent function's
+ varaible scope even after parent function has finished.
+
+ Note : jab bhi closure banta hai to  aapka fnc (parent function) aur uske variables ka ek backlink banaya jaata hai, aur uska naam hota hia [[enviroment]]
+
+
+ usage of closure : make private variable, prevent global pollute , encapsulation
+
+ function abcd(){
+   let a = 12;
+   return function(){
+      console.log(a);
+   }
+ }
+
+ const re = abcd();
+ re()
+
+
+ private counter
+
+ function counter(){
+   let a=0;
+   return function(){
+     a++
+     console.log(`${a} bar call hua`);
+   }
+ }
+
+ let func = counter()
+ func()
+ func()
+ func()
+ func()
+
+ let func2 = counter()
+ func2();
+ func2();
+
+
+ encapsulation of closure
+
+
+ function clickLimiter(){
+   let cl = 0;
+   return function(){
+     if(cl<5){
+       cl++;
+       console.log(`clicked : ${cl} time`);
+    }
+    else{
+       console.error("limit exceeded , try after some time");
+     }
+   }
+ }
+
+ let fnc = clickLimiter()
+ fnc()
+ fnc()
+ fnc()
+ fnc()
+ fnc()
+
+
+- make a toaster using closure ;
+
+let parent = document.querySelector(".parent")
+
+function createToaster(config){
+  return function(text){
+      let div = document.createElement("div");
+      div.textContent = text;
+      div.classList.add(
+        "w-fit",
+   
+        "rounded-md",
+        "px-4",
+        "py-3",
+  
+        "text-red-500",
+        `${config.theme ==="dark"?"bg-zinc-800":"bg-zinc-100"}`
+
+      )
+      document.querySelector(".parent").appendChild(div);
+       parent.classList.add(config.posX==="right"?'right-5':"left-5")
+       parent.classList.add(config.posY==="top"?'top-5':"bottom-5")
+
+     
+     setTimeout(()=>{
+        div.remove()
+     },config.duration*1000)
+
+      }
+}
+
+let toaster  = createToaster({
+  posX : "right",
+  posY: "top",
+  theme:"dark",
+  duration:3,
+})
+
+
+toaster("this is a dummy notification")
+
+
+setTimeout(()=>{
+  toaster("download now")
+},2000)
+
+setTimeout(()=>{
+  toaster("sourav giri accesped your requrest")
+},4000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# this keyword  : 
+
+
+window : window is a global object provided by the browser that allows us to access the browser's features using JavaScript. 
+
+
+
+this is a special keyword which have different meaning in different context.
+global scope  : value of this window
+ window ek global object hai jo browser provide karta hai. Ye object ek box of features ki tarah kaam karta hai jisme browser ke saare built-in features aur functionality hote hain.aur hum us saare feature or functionality ko hamare application mein use kar sakte hai through window in js.
+ console.log(this);
+
+
+
+ function abcd(){
+   console.log(this);
+ }
+ abcd()
+
+
+
+ method this ka value object hota hai
+ const userDetails = {
+     console.log(this);
+     const defg = ()=>{
+       console.log(this);
+     }
+     function mef(){
+       console.log(this);
+     }
+     defg();
+     mef()
+
+   }
+ }
+
+ userDetails.sayName()
+
+
+
+
+
+ Event Handler mein this ka valu wo element hota hai jiske upor apne event handler lagaya hai
+ document.querySelector("h1").addEventListener("click",function(){
+   console.log(this);
+ })
+
+
+
+
+ class ke andar this ka value ek blank object hota hai.
+
+ class Abc{
+    a = 12
+   constructor(){
+     console.log("hey");
+     this.a = 12
+   }
+ }
+
+ let val = new Abc()
+  console.log(val);
+
+
+
+
+ this ki value 
+ ----------------->
+
+ global - window
+ function declaration - window
+ method with es5 func - object
+ method with es6 arrow fnc - window
+ es5 function inside es5 method  - window
+ arrow function inside es5 method - object
+ event handler -  Element
+ construcor function -> black object
+ class - blank object
+
+
+ whenever you call an function with new keyword that function treated as constructor function.
+
+
+ - Arrow functions and lexical this.
+ Note : in arrow function will always take this ka value from parent scope this ka value.ex. in method in a arrow function this ka value  object hoga
+arrow function have not there own this,prototype,arguments[construcotr].
+
+        
+
+
+ -- this bind,call,apply : they are three way to call an function , in which the value of this, point to an object of that function.
+ call,apply,bind e tin tarika hai kisi function ko call karne ka object ko this mann kar.
+ function ko call karte wakt , aap set kar set kar sakte ho ki uske andar this ka value kya hoga .
+apply does same thing which call does, the only difference is that if function take any parameter then we take an array as a second argument in apply.
+bind does same thing which call and apply does. the only difference is that, it does not call the function immedietely, it retun a function , and we can
+call it anytime
+
+ const obj = {
+   username:"sourav",
+   age:25
+ }
+
+
+ function userDetails(a,b,c){
+   console.log(this);
+   console.log(a,b,c);
+ }
+
+   userDetails.call(obj,1,2,3)
+   userDetails.apply(obj,[1,2,3])
+ let fnc =  userDetails.bind(obj,1,2,3)
+ fnc()
+
+:: Card with this keyword minor projet.
+
+
+
+
+
+
+
+
+# o------------------------------------------object oriented programming[oop'S]---------------------------------------------------
+
+
+#----------construcotr function--------- :  
+
+1. What is a Constructor Function?
+
+construcotr function is a special type of function in javscript that is used to create multiple object with same structur of properties
+whenever we call function with new keyword that function treats as constructor function, in a construcor function, this keyword value always refer
+to a new created blank object,which return automatically. 
+
+
+ function CreateBisuits(name,price,qty,company,category){
+   this.name = name;
+   this.price = price;
+   this.qty = qty;
+   this.company = company;
+   this.category= category; 
+ }
+
+ let b1 = new createBisuits("Oreo","23",8,"Chocolate","marie");
+ let b2 = new createBisuits("Oreo","123",3,"Catbery","chocolate filled");
+ console.log(b1);
+console.log(b2);
+
+ Note : its a conventation to write first capital letter of constructor function.like CreatePencil is a constructor function
+
+ Note : arrow functions do NOT have their own this, prototype, or [[Construct]] internal method.
+
+ Note : constructor function ki prototype [{}] mein jo vi hum store karte hai wo
+ usse banne har object ki __proto__ mien aa jati hai 
+
+
+
+ function CreatePencil(name,price,color,company){
+   this.name = name;
+   this.price = price;
+   this.color =color;
+   this.company = company;
+ }
+
+ CreatePencil.prototype.type="pensil" 
+ CreatePencil.prototype.write=function(data){
+
+     let div = document.createElement("h1");
+     div.textContent = data
+     div.style.color=this.color
+     document.querySelector("body").prepend(div)
+   }
+
+
+ let natraj = new CreatePencil("Natraj",5,"blue","natraj")
+ let apsara = new CreatePencil("apsara","10","red","Aapsara")
+
+
+
+2. What does new do internally?
+   - first create a new empty blank object.
+   - set this to refer to that  object
+   - add properties to this
+   - automatic return that blank object
+
+
+3. Adding Methods in Constructor
+
+    function Car(name, model) {
+    this.name = name;
+    this.model = model;
+
+    this.start = function() {
+      console.log(this.name + " is starting...");
+    }
+  }
+
+  const c1 = new Car("BMW", "X5");
+  c1.start();
+  ⚠ Problem: If we create 100 cars, the start() method is copied 100 times → memory waste.
+
+
+
+
+4. Using prototype to save memory : Method stored once, shared with all ,Efficient memory usage
+
+    function Car(name, model) {
+      this.name = name;
+      this.model = model;
+    }
+
+    Car.prototype.start = function() {
+      console.log(this.name + " started");
+    }
+
+    const car1 = new Car("BMW", "X5");
+    const car2 = new Car("Audi", "A8");
+
+    car1.start();
+    car2.start();
+
+
+
+
+
+
+5. Checking Constructor with instanceof
+
+   console.log(car1 instanceof Car);  // true
+
+
+
+
+6. Default return behavior
+   Constructor functions return the object automatically.
+   But if you manually return an object, it overrides automatic return.
+
+   function Test() {
+    this.x = 10;
+    return { y: 20 };
+  }
+  const t = new Test();
+  console.log(t); // { y: 20 }
+
+  Note : Returning primitive values (number, string, etc.) is ignored.
+
+
+
+7. Private Variables using Closures [make private variables,protect data, encapsulation,closure]
+
+    function BankAccount(name, balance) {
+      let privateBalance = balance; // private
+
+      this.name = name;
+
+      this.showBalance = function() {
+        console.log("Balance:", privateBalance);
+      }
+    }
+
+    const acc1 = new BankAccount("Sourav", 5000);
+    acc1.showBalance();
+ 
+
+
+
+  ex. 2
+    function CreateProduct(name,category,price){
+      let originalPrice = price
+      this.name = name;
+      this.category = category;
+
+      this.showPrice = function(){
+        console.log(`price = ${originalPrice}`);
+      }
+      
+      this.discount = function(){
+        console.log(`you have to pay Rs ${originalPrice - (originalPrice*(5/100))}`);
+    }
+    
+  }
+    const product1 = new CreateProduct("Iphon 16 Max Pro","electronics-gadgets",120000);
+    console.log(product1);
+
+
+
+# Prototype & inheritance in construcotr function 
+Every JavaScript function automatically gets a property called prototype, and that prototype is an object that contains shared methods and properties.
+Note : arrow function do not have their own prototype,this and [construcor] internal method
+
+function Person(name){
+  this.name =name;
+}
+
+Person.prototype.sayHi=function(){
+  console.log(`Hi ${this.name}`);
+}
+
+const p1 =new Person("gourav")
+p1.sayHi()
+
+
+
+
+# inheritance-----
+
+function Person(name){
+  this.name =name;
+}
+
+Person.prototype.sayHi=function(){
+  console.log(`Hi ${this.name}`);
+}
+
+
+function Student(name,course){
+  Person.call(this,name) //inherit properties from parent constructor
+  this.course = course ;
+}
+
+// inherit methods from parent constructor
+Student.prototype = Object.create(Person.prototype);
+Student.prototype.construcotr = Student [prototype.construcotr = Maintains correct reference]
+
+
+Student.prototype.isStudying = function(){
+  console.log(`${this.name} is studing from ${this.course}`);
+}
+
+const s1 = new Student("sourav giri","Computer science engineer")
+
+s1.isStudying()
+s1.sayHi()
+
+
+
+
+
+# ------------Object.Create()---------
+// Object.create() : create prototype inheritance 
+// Object.create can contain  only be an object or null;
+
+
+let myInfo = {
+  name:"sourav giri",
+  age:25,
+  gender:"male",
+  isStudying:function(){
+    console.log(`${this.name} is studing from "Sheryians Coding School"`);
+  }
+}
+const obj = Object.create(myInfo)
+console.log(obj);
+
+
+
+
+# // Method Overriding (Polymorphism concept in javascript oops)
+
+function Payment(amount){
+  this.amount = amount
+}
+
+Payment.prototype.pay = function(){
+  console.log(`paying ${this.amount} using default method`);
+}
+
+
+function UpiPayment(amount,upiId){
+  Payment.call(this,amount);
+  this.upiId = upiId;
+}
+
+UpiPayment.prototype = Object.create(Payment.prototype);
+UpiPayment.prototype.constructor = UpiPayment;
+
+UpiPayment.prototype.pay = function(){
+  console.log(`paying ${this.amount} from upi ${this.upiId}`);
+}
+
+
+function CardPayment(amount,cardNo){
+  Payment.call(this,amount);
+  this.cardNo = cardNo;
+}
+
+CardPayment.prototype = Object.create(Payment.prototype);
+CardPayment.prototype.constructor = CardPayment;
+
+CardPayment.prototype.pay = function(){
+  console.log(`paying ${this.amount} from cardno ${this.cardNo}`);
+}
+
+function CashPayment(amount){
+  Payment.call(this,amount);
+}
+
+
+CashPayment.prototype = Object.create(Payment.prototype);
+CashPayment.prototype.constructor = CashPayment;
+
+CashPayment.prototype.pay = function(){
+  console.log(`paying ${this.amount} in cash`);
+}
+
+const p1 = new UpiPayment(500, "sourav@ybl");
+const p2 = new CardPayment(1000, "1234567812345678");
+const p3 = new CashPayment(200);
+
+p1.pay();
+p2.pay();
+p3.pay();
+
+
+
+
+#------------class-----------
+
+
+Classes are the syntatic sugar in js, behind the secene they act as like constructor function.
+
+
+class CreatePencil(){
+  constructor(price){
+    this.name = price
+  }
+  write(){
+    console.log("i am writing")
+  }
+}
+
+behind the scene ------>
+
+function CreatePencil(price){
+  this.price = price
+
+}
+CreatePencil.prototype.write = function(){
+  console.log("i am writing")
+}
+
+
+
+Constructor Method : whenever we create a new instance with any class, constructor function call first automatically;
+ constructor function is used for set default value or initialize the value.
+ class CreatePencil{
+   constructor(name,price,color,company){
+   
+   static type = "pencil"
+
+      this.name = name
+      this.price = price
+      this.color = color      
+      this.company= company
+   }
+
+   erase(){
+     console.log(this);
+
+     document.querySelectorAll("h1").forEach((item,index)=>{
+       if(item.style.color===this.color){
+         item.remove()
+       }
+     })
+   }
+
+   write(text){
+     let h1 = document.createElement("h1");
+     h1.style.color = this.color;
+     document.querySelector("body").prepend(h1);
+   }
+ }
+ let p1 = new CreatePencil("apsara",12,"green","APSARA");
+ let p2 = new CreatePencil("natraj",4,"aqua","NATRAJ");
+
+
+
+
+Property type	          Belongs to	        Access using
+Instance property	     Each object	       p1.name
+Static property      	Class itself	     CreatePencil.type
+
+
+
+class User{
+  constructor(name,address,username,email){
+     this.name = name;
+     this.address = address;
+     this.username = username;
+     this.email = email;
+     this.role = "user";
+   }
+
+
+   checkRole(){
+    return (`you are a ${this.role}`);
+   }
+  
+   write(text){
+     let h1 = document.createElement("h1");
+     h1.textContent = `${this.name} : ${text}`;
+     document.querySelector("body").appendChild(h1)
+   }
+
+}
+
+
+super directly call parent class constructor
+class Admin extends User{
+constructor(name,address,username,email){
+  super(name,address,username,email);
+  this.role="admin"
+
+}
+
+remove(){
+  document.querySelectorAll("h1").forEach((item,index)=>{
+    item.remove()
+  })
+}
+
+}
+
+const user1 = 
+new User("sourav",
+  "dehi",
+  "topu123",
+  "souravgiri8032@gmail.com",
+
+)
+
+
+
+const admin1 = new Admin("akash gupta","delhi","akku","aksh12@gmail.com","devops")
+
+ preivous inheritance was classical inheritance -java,cpp,js etc
+ classses banana and unhe extend kardena
+
+
+ ptototypal inheritance only present in javascript : object -> object [js mein pehle class nahi tha, tab prototypal inheritance hota tha]
+
+let cofee={
+  color:"drink",
+  drink:function(){
+    console.log("gut gut gut..");
+  }
+};
+
+let arabiataCoffee = Object.create(cofee);
+arabiataCoffee.price = "$123"
+arabiataCoffee.taste = "chocolatey"
+
+console.log(arabiataCoffee);
+
+
+
+
+
+Object-Oriented Programming (OOP) is a programming paradigm that organizes software design around objects, which represent real-world entities and contain data (properties) and behavior (methods).
+
+   
+🧠 4 Pillars of OOP in JavaScript:----
+
+Encapsulation            Hiding internal details                           private fields, getters/setters
+Abstraction              Hiding  complexity & showing only functionality    abstract methods via classes
+Inheritance              Reuse parent properties/methods                   extends, super()
+Polymorphism             Same method, different behavior                   method overriding
+
+
+
+🏗 Encapsulation : make private variables,protect your varialble or data,
+Protecting data by restricting direct access.
+
+
+class BankAccount {
+  #balance; // private
+  constructor(name, balance) {
+    this.name = name;
+    this.#balance = balance;
+  }
+
+  showBalance() {
+    console.log("Balance:", this.#balance);
+  }
+}
+const user = new BankAccount("Sourav", 5000);
+user.showBalance();
+
+console.log(user.#balance); // ❌ Error
+
+
+
+
+
+
+
+🎭 Abstraction
+Showing only essential information and hiding implementation details.
+
+class Payment {
+  process() {
+    console.log("Processing payment...");  // hidden logic
+  }
+}
+
+const p = new Payment();
+p.process();
+User doesn’t know internal logic — only uses the method.
+
+
+
+
+👨‍👩‍👦 Inheritance
+one class derives properties and method from another class using exptends keyword
+
+class Person{
+  constructor(name){
+    this.name = name;
+  }
+  sayHi(){
+    console.log(`hi from ${this.name}`);
+  }
+}
+
+
+class Student extends Person{
+ constructor(name,course){
+  super(name);
+  this.course = course
+ }
+ study(){
+  console.log(`${this.name} is studying from ${this.course}`);
+ }
+}
+
+const s1 = new Student("sourav giri","computer science engineer")
+
+
+
+
+
+
+🌀 Polymorphism
+Same method name, different implementation in child class.[method overriding]
+
+class Animal{
+  sound(){
+    console.log("Animal makes sound");
+  }
+}
+
+class Dog extends Animal{
+  sound(){
+    console.log("bark bark");
+  }
+}
+
+const d1 =new Dog()
+
+
+
+
+🧩 Static Methods & Static properties (Belong to the class, not to instance.)
+class MathHelper{
+  static add(a,b){
+    return (a+b);
+  }
+  static type="Math helper"
+}
+
+console.log(MathHelper.add(12,23))
+
+
+
+
+
+📦 Getter & Setter [Control access to properties.]
+class CreateProduct{
+  constructor(name,category,price){
+    this.name = name;
+    this.category = category;
+    this._price = price
+  }
+  
+  get price(){
+     return this._price;
+  }
+
+  set price(value){
+    this._price = value;
+  }
+
+}
+
+const p1 = new CreateProduct("toothPaste","daily essential",250);
+console.log(p1.price);
+p1.price = 120;
+console.log(p1.price);
+
+
+
+
+
+🔗 Super keyword
+Used to call parent constructor or methods.
+
+class Parent {
+  say() { console.log("Parent"); }
+}
+
+class Child extends Parent {
+  say() {
+    super.say();    // Calling parent method
+    console.log("Child");
+  }
+}
+
+
+
+
+
+
+
+
+
+# asynchronous javascript ----------------------------------------------
+
+- Synchronous vs asynchronous JS : 
+
+
+-what is asynchronous JS ? 
+“Asynchronous JavaScript enables non-blocking operations(Fetching data from an API,Reading files,Waiting for a timerNetwork requests), allowing long-running tasks to run in the background while the main thread continues executing. It is implemented using callbacks, promises, async/await, and the event loop.”
+
+
+-what is non-blocking operations in JS?
+non blocking operations like fetching data from an API,reading files or waiting for timerNetwork request, JS does not wait for them to complete. It sends these task aside and keep moving
+
+
+
+Thread = A path of execution where code runs line by line.
+JS has only ONE thread — meaning it can do one thing at a time, in order.
+
+
+-is javascript synchronous language or asynchronous?
+“JavaScript is a synchronous, single-threaded language by default, meaning it executes code line by line. However, it provides mechanisms to handle asynchronous operations using features like callbacks, Promises, async/await, and the event loop.
+
+
+
+-Why do we need Asynchronous JavaScript?
+Because some tasks take time—for completion , which not depend on  us example:
+Fetching data from an API
+Reading files
+Waiting for a timer
+Network requests
+If JavaScript waited for each of them, the program would freeze.
+Asynchronous JS solves this problem.
+
+
+
+
+-How is Async behavior achieved?
+By Using:
+Callbacks
+Promises
+Async/Await
+Event Loop, Web APIs, and Callback Queue
+
+
+
+
+Note : In javascript after completing executing all synchronous code,after then asynchronous code will execute in main stack.
+
+behind the scene : 
+
+--Asynchronous code
+--web APIs(browser part);
+Web APIs are built-in browser features that handle asynchronous operations outside the JavaScript engine.
+after processing the task, Web APIs push the callback function to the appropriate queue (callback queue or microtask queue) for execution.
+--callback que / microtask que
+callback queue stores callbacks from asynchronous tasks like:
+setTimeout()
+DOM events (click, mousemove)
+setInterval()
+
+microtask queue stores microtasks like:
+Promises (.then(), .catch(), .finally())
+
+➡️ Microtask Queue has higher priority than Callback Queue.
+➡️ Microtasks are always executed before callback que tasks
+
+
+event loop
+The Event Loop continuously checks the Call Stack and the Queue.
+If the Call Stack becomes empty, the Event Loop takes tasks from the Microtask Queue first, then the Callback (Macrotask) Queue, and pushes them to the Call Stack for execution.
+
+
+call-stack
+where all code are executed. part of js engine.
+and used LIFO(last in fast out) method
+
+
+
+-difference b/w synchronous code vs asynchronous code ?
+
+synchronous                               asynchronous
+execute line by line                 execute without  blocking other operations
+
+each line wait for preivous           long task run in the background
+ line to be finish 
+
+blocking                                 non-blocking
+
+ex. normal function,loops            setInterval,fetch,promises
+
+
+
+
+
+
+callback: whenever a function accept an another function as a parameter and involked that function inside its body, that is called callback function.
+✅ Callback that runs immediately → Synchronous
+⏳ Callback that runs later → Asynchronous
+
+
+
+callback hell : Callback Hell is a situation in JavaScript where multiple nested callbacks are used one inside another, creating deeply indented and hard-to-read code.
+
+ex. 1
+// // e code ka access hamare paas nahi hai kahi aur likha hai cloude main e code(library mein )
+function fetchedUserProfile(name,cb){
+  console.log(`profile is fetching...`);
+  setTimeout(()=>{   
+    cb({id:12334,name,age:25,gender:"male"})
+  },2000)
+}
+
+
+function getMeAllthePost(id,cb){
+ console.log("all posts is fetching...");
+ setTimeout(()=>{
+   cb({id,posts:["helllo","magarati","santa"]})
+ },3000)
+} 
+
+
+
+function getAlltheSavedPost(id,cb){
+  console.log('fetching all saved posts...');
+  setTimeout(()=>{
+     cb({id,savedPosts:["hari hara","jibaonsa das"]})
+  },2500)
+}
+
+
+//we have that
+fetchedUserProfile("sourav",function(data){
+  console.log(data);
+  getMeAllthePost(data.id,function(posts){
+    console.log(posts);
+    getAlltheSavedPost(data.id,function(savedPosts){
+      console.log(savedPosts);
+      // ... 
+    })
+  })
+})
+
+
+
+
+ex.2
+
+const red = document.querySelector(".red");
+const blue = document.querySelector(".blue")
+const green = document.querySelector(".green")
+const yellow = document.querySelector(".yellow")
+const orange = document.querySelector(".orange")
+const magenta = document.querySelector(".magenta")
+const pink = document.querySelector(".pink")
+const aqua = document.querySelector(".aqua")
+
+
+
+function changeColorSimulation(elem,color,time,cb){
+  console.log(`change ${color} color after ${time} seconds... `);
+  setTimeout(()=>{
+      elem.style.color=color
+      cb()
+  },1000*time)
+}
+
+
+
+
+changeColorSimulation(red,"red",1,function(){
+ console.log("color changed is completed");
+ changeColorSimulation(blue,"blue",2,function(){
+   console.log("color changed is completed");
+   changeColorSimulation(green,"green",3,function(){
+      console.log("color changed is completed");
+      changeColorSimulation(yellow,"yellow",4,function(){
+        console.log("color changed is completed");
+        changeColorSimulation(orange,"orange",5,function(){
+          console.log("color changed is completed");
+          changeColorSimulation(magenta,"magenta",6,function(){
+            console.log("color changed is completed");
+            changeColorSimulation(pink,"pink",7,function(){
+              console.log("color changed is completed");
+              changeColorSimulation(aqua,"aqua",8,function(){
+                console.log("color changed is completed");
+              })
+            })
+          })
+        })
+      })
+   });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+#What is a Promise?
+A Promise is an object in JavaScript that represents the result of an asynchronous operation that may complete in the future (not immediately)
+
+
+#It has three states:
+State	    Meaning
+Pending	  Still working / waiting
+Fulfilled (Resolved)	Successfully completed
+Rejected	Failed with an error
+
+
+
+#Why Do We Need Promises?
+Because callbacks create callback hell, are difficult to maintain, difficult to read, difficult to debug , that's why.
+
+
+
+#Creating a Promise
+let promise = new Promise((resolve, reject) => {
+  let success = true;
+
+  if (success) {
+    resolve("Task completed successfully!");
+  } else {
+    reject("Something went wrong!");
+  }
+});
+
+
+console.log(promise);
+
+
+
+function promise(){
+ return new Promise((resolve,reject)=>{
+   let sucess = true;
+   if(sucess){
+    resolve("you win")
+   }
+   else{
+    reject("you loose")
+   }
+  })
+}
+console.log(promise())
+
+
+
+let pr = Promise.resolve("hey i am done")
+let pr = Promise.reject("undo")
+
+
+#applying .then,.catch.,.finally on promises(consume)
+promise()
+.then(res=>{
+  console.log(res);
+})
+.catch(err=>{
+  console.log(err);
+})
+.finally(() => {
+    console.log("Cleanup: Operation completed."); // This will always run
+});
+
+
+
+#promises with setTimeOut(async work)
+function fetchData(){
+  return new Promise((resolve,reject)=>{
+    let status = true
+    console.log("data is fetching...");
+    setTimeout(()=>{
+      if(status){
+        resolve("data is fetched")
+      }
+      else{
+        reject("network error")
+      }
+    },2000)
+  })
+}
+
+
+fetchData()
+.then(res=>{
+  console.log(res);
+})
+.catch(err=>{
+  console.log(err);
+})
+.finally(()=>{
+  console.log("complete operation!");
+})
+
+
+
+
+
+
+# ⏳ Chaining Promises (Avoiding Callback Hell)
+ex.1 
+// because anything returned inside .then() becomes a resolved promise automatically.
+function step1(){
+  return Promise.resolve("hello g kaise ho saare.")
+}
+
+step1()
+.then(res=>{
+  console.log(res);
+  return "ha g mein achha hoon"; // behind the scene return Promise.resolve("ha g mein achha hoon")
+})
+.then((res)=>{
+  console.log(res);
+  return "bha re bhagode"
+})
+.then((res=>{
+  console.log(res);
+  return "sala kuttar bachha";
+}))
+.then(res=>{
+  console.log(res);
+})
+
+
+
+ex. 2
+
+
+function step1(){
+  return Promise.resolve("step 1 is done")
+}
+
+function step2(){
+  return Promise.reject('step 2 is done')
+}
+
+function step3(){
+  return Promise.resolve("step 3 is done")
+}
+
+step1()
+.then(res=>{
+  console.log(res);
+  return step2()
+})
+.then((res)=>{
+  console.log(res);
+  return step3();
+})
+.then((res)=>{
+  console.log(res);
+})
+.catch((err)=>{
+  console.log(err);
+})
+
+
+
+
+
+#Promoses real life example : 
+
+function orderFood() {
+  let status = true;
+  console.log("your order is processing...");
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (status) {
+        resolve("your oder is accepted🎉✅");
+      } else {
+        reject("sorry our all kitchen is busy now, please try after some time");
+      }
+    }, 5000);
+  });
+}
+
+
+
+
+function makingFood() {
+  let status = true;
+  console.log("your food is making...");
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (status) {
+        resolve("your food is ready for delivary");
+      } else {
+        reject("sorry for incovience!we will refund your money(within 1 hour)");
+      }
+    }, 5000);
+  });
+}
+
+
+
+
+function delivaryFood() {
+  let status = true;
+  console.log("your food is on the way");
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (status) {
+        resolve("here is you food sir");
+      } else {
+        reject("we are on the way, take little time!");
+      }
+    }, 3000);
+  });
+}
+
+
+function eatFood(){
+  let status = true;
+  console.log("i am just eating you food");
+  return new Promise((resolve,reject)=>{
+     setTimeout(()=>{
+       if(status){
+      resolve("good food")
+     }
+     else{
+      reject("bad food experience")
+     }
+     },2000)
+  })
+}
+
+
+orderFood()
+  .then((res) => {
+    console.log(res);
+    return makingFood();
+  })
+  .then((res) => {
+    console.log(res);
+    return delivaryFood();
+  })
+  .then((res) => {
+    console.log(res);
+    return eatFood();
+  })
+  .then(res=>{
+    console.log(res);
+  })
+ .catch(err=>{
+  console.log(err);
+ });
+
+
+
+#1. Promise.all()
+- wait for all promises to resolve;
+- if any of them fails then entire result become rejected;
+
+const p1 = Promise.resolve("Pizza ready")
+const p2 = Promise.reject("Burger Ready")
+const p3 = Promise.resolve("Coke ready")
+
+Promise.all([p1,p2,p3])
+.then(res=>{
+  console.log(res);
+})
+.catch(err=>{
+  console.log(err);
+})
+
+
+
+
+#2. Promise.race()
+#3. Promise.any()
+#4. Promise.allSettled()
+
+
+
+
+
+
+
+
+
+
+#What is async/await?
+
+-async/await is a modern and cleaner way to work with Promises in JavaScript.
+
+
+
+-What is async keyword?
+async is used before a function
+It automatically returns a Promise
+Whatever value you return from an async function becomes a resolved Promise.
+When you manually use resolve() or reject() inside an async function, you are controlling the promise state.
+
+example.1
+async function  abcd() {
+  return "hello world"    //Promise.resolve("hello world")
+}
+
+
+abcd()
+.then(res=>{
+  console.log(res);
+})
+
+
+ex.2
+async function abcd(){
+  console.log("fetching...");
+  return new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+       resolve("data is fetched")
+    },2000)
+  })
+}
+
+abcd()
+.then(res=>{
+  console.log(res);
+})
+.catch(err=>{
+  console.log(err);
+})
+
+
+
+
+
+-What is await keyword?
+await is used inside async functions only
+It waits for a Promise to resolve
+It pauses execution of that line until the promise settles.
+Await always expects a value that can be treated like a Promise. like this Promise.resolve(value)
+
+ function getData() {
+  return new Promise(resolve => {
+    setTimeout(() => resolve("Data Received"), 2000);
+  });
+}
+
+async function getInfo() {
+  console.log("Fetching...");
+  const result = await getData();
+  console.log(result);
+}
+
+getInfo();
+
+
+
+ex. 2
+
+function pr(){
+  let status = false
+  return new Promise((resolve,reject)=>{
+    if(status){
+      resolve("you win")
+    }
+    else{
+      reject("you loose")
+    }
+  })
+}
+
+async function kaal() {
+
+  try {
+      
+  let res = await pr()
+  console.log(res);
+  } catch (error) {
+     console.log(error);
+  }
+  
+}
+
+kaal()
+
+
+
+
+#Error Handling with try/catch
+Note : when we use async/await always put your code inside try-catch so that, your reject code run inside catch block
+
+
+
+
+
+
+
+#API : Application programming interface : its an set of rules and protocol that allow d/w software programms to  excange the data nad communicate with each other
+
+API is a messenger that takes a request from a client and returns the response(data) from a server.
+response or data mostly get in JSON(javascript object notation) format (e define hota hai server ke paas ki wo kis format mein data veje)
+
+#fetch
+fetch is a built-in JavaScript function used to make network (HTTP) requests and get data from APIs.
+It return a promise
+note : in fetch mein jo rawdata milta usko json  mein convert karna padega
+
+fetch("https://fakestoreapi.com/products")
+.then(res=>{
+  return res.json();
+
+})
+.then(res=>{
+  console.log(res);
+})
+.catch(err=>{
+  console.log(err);
+})
+
+
+
+
+async function fetchData(){
+console.log("data is fetching...");
+try {
+   let data =  await fetch("https://fakestoreapi.com/productss")
+   if(!data.ok)
+    throw new Error("something went wrong");
+
+   let result =  await data.json()
+   return result
+  
+} catch (error) {
+  console.log(error.message);
+  return Promise.reject(error.message)
+}
+}
+
+fetchData()
+.then(res=>{
+  console.log(res);
+  console.log("data fetched completed");
+})
+.catch(err=>{
+  console.log(err);
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Example: Accidental Global Variable  where this global leakage creates unexpected behavior? ; we should always have to define let const var during declaraton
+
+function calculatePrice(price, tax) {
+  total = price + (price * tax); // ⚠️ forgot `let/const`
+  return total;
+}
+
+console.log(calculatePrice(100, 0.1)); // 110
+console.log(total); // 😱 110 (global variable!)
+
+
+
+# Understanding the loop with var with settimeout or setinterval
+
+-var i = 1; → var is function-scoped, not block-scoped.
+-So, during the entire loop, there’s only one i variable shared across all iterations.
+
