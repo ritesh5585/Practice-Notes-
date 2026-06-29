@@ -1,6 +1,6 @@
 # Introduction
 Brendan Eich -> work in Netscape(browser) ->(1995) Mocha(used to apply logic in client side)(15 days) -> change into Javascript --> es5/es6(web community(Ecma Script-maintain javascript))
- 
+  
 
 ## difference between scripting language and programming language, markup languae, styling language
 Programming language → Used to create full-fledged applications, often compiled before execution (e.g., C, Java).
