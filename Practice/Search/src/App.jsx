@@ -18,7 +18,7 @@ const App = () => {
         {data
           .filter((e) => e.toLowerCase().includes(query.toLowerCase()))
           .map((items, index) => {
-            return <li key={index}>{itenms}</li>;
+            return <li key={index}>{items}</li>;
           })}
       </ul>
     </div>
