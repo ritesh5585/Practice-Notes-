@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export const metadata = {
@@ -13,7 +14,12 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning // Add this
 
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Navbar />
+        <div>
+          {children}
+        </div>
+        ◘</body>
     </html>
   );
 }

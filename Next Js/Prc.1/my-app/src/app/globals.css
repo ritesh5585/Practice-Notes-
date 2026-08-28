@@ -1,3 +1,4 @@
+/* app/globals.css */
 @import "tailwindcss";
 
 :root {
@@ -12,8 +13,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode class for manual toggle */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+/* System preference dark mode */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -23,4 +31,5 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
