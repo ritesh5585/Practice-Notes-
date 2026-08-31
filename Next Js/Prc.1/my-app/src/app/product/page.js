@@ -44,8 +44,8 @@ const ProductsPage = async () => {
                     <svg
                       key={index}
                       className={`w-4 h-4 ${index < Math.round(product.rating.rate)
-                          ? 'text-yellow-400'
-                          : 'text-gray-300 dark:text-gray-600'
+                        ? 'text-yellow-400'
+                        : 'text-gray-300 dark:text-gray-600'
                         }`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
