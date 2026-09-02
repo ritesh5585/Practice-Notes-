@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-background">
         {/* Navbar */}
-        <nav className="border-b bg-card">
+        <nav className="border-b">
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
             <Link href="/" className="text-xl font-bold">
               MyStore
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
                   Home
                 </Button>
               </Link>
-              <Link href="/products">
+              <Link href="/product">
                 <Button variant="ghost" size="sm">
                   Products
                 </Button>
