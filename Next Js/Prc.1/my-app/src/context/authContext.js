@@ -1,6 +1,6 @@
 "use client"
 import { api } from "@/lib/axios";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 let Auth = createContext()
 
@@ -26,4 +26,6 @@ export let AuthProvider = ({ children }) => {
         {children}
     </Auth.Provider >
 }
-export let useAuth = useContext(Auth)
+export const useAuth = () => {
+    return useContext(Auth);
+};
