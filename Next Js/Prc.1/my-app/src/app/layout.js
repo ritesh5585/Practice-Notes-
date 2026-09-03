@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import { AuthProvider } from '@/context/authContext';
 
 export const metadata = {
   title: 'MyStore',
@@ -14,16 +15,18 @@ export default function RootLayout({ children }) {
         <meta name="darkreader-lock" content="true" />
       </head>
       <body className="min-h-screen bg-background" suppressContentEditableWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>
-          {/* Navbar */}
-          <Navbar />
-          {/* Main Content */}
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange>
+            {/* Navbar */}
+            <Navbar />
+            {/* Main Content */}
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
