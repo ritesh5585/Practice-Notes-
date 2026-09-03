@@ -1,7 +1,6 @@
-// app/layout.js
+import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Navbar from '@/components/Navbar';
 
 export const metadata = {
   title: 'MyStore',
@@ -11,36 +10,20 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-background">
-        {/* Navbar */}
-        <nav className="border-b">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold">
-              MyStore
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm">
-                  Home
-                </Button>
-              </Link>
-              <Link href="/product">
-                <Button variant="ghost" size="sm">
-                  Products
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button variant="ghost" size="sm">
-                  Login
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main Content */}
-        {children}
+      <head>
+        <meta name="darkreader-lock" content="true" />
+      </head>
+      <body className="min-h-screen bg-background" suppressContentEditableWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+          {/* Navbar */}
+          <Navbar />
+          {/* Main Content */}
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
