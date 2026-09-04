@@ -9,8 +9,8 @@ function addExpense(title, amount, category) {
         category,
         date: new Date().toISOString().split("T")[0]
     }
-    expenses.push(expense);
-    return expense;
+    expenses.push(expenses);
+    return expenses;
 
 }
 
