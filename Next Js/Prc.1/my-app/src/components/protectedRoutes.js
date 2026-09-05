@@ -5,13 +5,16 @@ import { useEffect } from "react"
 
 const ProtectedRoutes = ({ children }) => {
 
+    let { user, loading } = useAuth
     let router = useRouter()
 
-    let { user } = useAuth
+    if (loading) return <h1>Loading...
+
+    </h1>
 
     useEffect(() => {
         if (!user) router.replace("/login")
-    }, [user, children])
+    }, [user, loading, router])
 }
-export default 
-ProtectedRoutes
+export default
+    ProtectedRoutes

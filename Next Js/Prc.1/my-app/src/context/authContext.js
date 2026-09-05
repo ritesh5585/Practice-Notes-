@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 let Auth = createContext()
+const [loading, setLoading] = useState(true)
 
 export let AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
@@ -13,6 +14,8 @@ export let AuthProvider = ({ children }) => {
         } catch (error) {
             setUser(null)
             console.log("error in get api", error)
+        } finally{
+            setLoading(false)
         }
     }
 
@@ -21,7 +24,7 @@ export let AuthProvider = ({ children }) => {
     }, [])
 
     return <Auth.Provider value={
-        { setUser, user }
+        { setUser, user, loading }
     } >
         {children}
     </Auth.Provider >
