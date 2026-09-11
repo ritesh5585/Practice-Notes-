@@ -83,4 +83,21 @@ const students: student[] = [
 function getSTudent(student2: student[]){
  return student2.filter((stud) => stud.marks <= 90);
 }
-console.log(getSTudent(students));
+// console.log(getSTudent(students));
+
+interface Placeholder {
+  id: string;
+  label?: string;       // optional
+  boundSignature?: {    // optional
+    imageUrl: string;
+  };
+}
+
+let field1: Placeholder = { id: "p1", label: "Sign here", boundSignature: { imageUrl: "sig1.png" } };
+let field2: Placeholder = { id: "p2" }; // label aur boundSignature dono missing
+
+function describeField(field1: Placeholder):string {
+    if(field1.boundSignature) return `${field1.id}: signed with ${field1.boundSignature.imageUrl}`
+    else return field1.label ?? "unlabelled field"
+}
+console.log(describeField(field1))
