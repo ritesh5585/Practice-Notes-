@@ -187,3 +187,231 @@ Phir ek function banao "printBookInfo" jo:
 Ek Book object banao aur function ko call karke test karo.
 
 Poora code likh ke bhejo — interface, function, aur call teeno.
+
+Union Types — "yeh field sirf inn fixed values mein se ek ho sakta hai"
+
+Abhi tak humne string, number, boolean type use kiye — yeh generic types hain (koi bhi string chalega). Lekin real projects mein kai baar field ki value sirf kuch fixed options mein se ek honi chahiye — jaise InkSeal mein signature kaise banaya gaya: "draw", "type", ya "upload" — bas yeh teen, kuch aur nahi.
+
+Iske liye union type use karte hain — | (pipe) symbol se options jodte hain:
+
+typescript
+type SignatureMethod = "draw" | "type" | "upload";
+
+let method: SignatureMethod = "draw";     // ✅ theek
+method = "scan";                          // ❌ error — "scan" allowed options mein hai hi nahi
+
+Yeh string se zyada safe hai — agar tum string use karte, toh koi bhi galat spelling ("Draw", "drawn") bhi chal jaati bina error ke, aur bug sirf runtime pe pakda jaata. Union type se woh galti likhte waqt hi pakdi jaati hai.
+
+Union types objects ke andar bhi use hote hain
+typescript
+interface Signature {
+  id: string;
+  method: "draw" | "type" | "upload";
+}
+
+let sig: Signature = { id: "1", method: "upload" };
+sig.method = "photo"; // ❌ error
+Function mein union type ke saath "narrowing" (check karke decide karna)
+
+Jab kisi variable ka type union hota hai, tumhe pehle check karna padta hai woh kaunsa wala hai, tabhi uske hisaab se kaam karo:
+
+typescript
+function getMethodLabel(method: "draw" | "type" | "upload"): string {
+  if (method === "draw") {
+    return "Hand-drawn signature";
+  } else if (method === "type") {
+    return "Typed signature";
+  } else {
+    return "Uploaded signature";
+  }
+}
+
+Yeh if/else chain hi narrowing kehlata hai — matlab "possibility ko narrow (kam) karte jaana jab tak exact type na pata chal jaaye."
+
+Tumhara task
+1. Ek type banao "PaymentStatus" jo sirf teen values le sake:
+   "pending" | "completed" | "failed"
+
+2. Ek function banao "getStatusMessage" jo:
+   - ek parameter le: status, jo PaymentStatus type ka ho
+   - if/else use karke return kare:
+     - "pending"   → "Your payment is being processed"
+     - "completed" → "Payment successful!"
+     - "failed"    → "Payment failed, please try again"
+   - return type string honi chahiye
+
+3. Function ko teeno values ke saath call karke console.log se test karo
+
+Likh ke bhejo, phir uske baad Optional properties (?) aur Arrays of Objects pe jayenge — yeh dono InkSeal ke Placeholder[] jaisi cheezon mein direct kaam aayenge. 
+
+Ab agla concept: Optional Properties (?)
+
+Kabhi-kabhi object ka koi field hona zaroori nahi hota. Jaise ek user ka email hona chahiye, lekin phone number optional ho sakta hai. Iske liye ? lagate hain field name ke baad:
+
+typescript
+interface User {
+  name: string;
+  email: string;
+  phone?: string;   // yeh field ho bhi sakta hai, nahi bhi
+}
+
+let u1: User = { name: "Ateeksh", email: "a@x.com" };              // ✅ phone nahi diya, chalega
+let u2: User = { name: "Rahul", email: "r@x.com", phone: "9999" }; // ✅ yeh bhi chalega
+
+Bina ? ke, phone field har object mein dena zaroori hota — nahi doge to TypeScript error dega.
+
+Important gotcha: Jab tum optional field ko use karte ho, TypeScript tumhe warn karega ki woh undefined bhi ho sakta hai:
+
+typescript
+function printPhone(user: User) {
+  console.log(user.phone.length); // ❌ error — phone undefined bhi ho sakta hai, uska .length crash karega
+}
+
+Fix — pehle check karo woh exist karta hai ya nahi:
+
+typescript
+function printPhone(user: User) {
+  if (user.phone) {
+    console.log(user.phone.length); // ✅ ab safe hai, TS ko pata hai yahan phone zaroor exist karta hai
+  }
+}
+Arrays of Objects — yeh InkSeal mein directly kaam aata hai
+
+Ek array jisme har element ek pura object ho:
+
+typescript
+interface Todo {
+  title: string;
+  isDone: boolean;
+}
+
+let todos: Todo[] = [
+  { title: "Buy milk", isDone: false },
+  { title: "Learn TS", isDone: true },
+];
+Tumhara task
+1. Ek interface banao "Student" jisme:
+   - name: string
+   - marks: number
+   - remarks?: string   (optional)
+
+2. Ek array banao "students" jo Student[] type ka ho, usme 3 students daalo
+   (kisi ek student mein remarks do, baaki mein mat do)
+
+3. Ek function banao "getToppers" jo:
+   - students: Student[] parameter le
+   - sirf unhi students ko return kare jinke marks >= 90 (return type Student[])
+   - .filter() use karna hai isme
+
+4. Function call karke result console.log karo
+
+Yeh thoda bada task hai — sab concepts mila ke (interface + optional + array + filter). Jitna bhi aaye likho, jahan atko wahi bata dena.
+
+Generics — "yeh function/type kisi bhi type ke saath kaam kare, lekin type-safe reh kar"
+
+Socho tumhe ek function chahiye jo array ka pehla element nikale — chahe number ka array ho, string ka ho, ya Student ka ho. Bina generics ke tumhe alag-alag function banane padte:
+
+typescript
+function firstNumber(arr: number[]): number {
+  return arr[0];
+}
+function firstString(arr: string[]): string {
+  return arr[0];
+}
+
+Yeh repetitive hai. Generics se ek hi function ban jaata hai jo kisi bhi type ke saath kaam kare:
+
+typescript
+function first<T>(arr: T[]): T {
+  return arr[0];
+}
+
+first([1, 2, 3]);          // T yahan number ban gaya, return bhi number
+first(["a", "b"]);         // T yahan string ban gaya, return bhi string
+first(students);           // T yahan Student ban gaya, return bhi Student
+
+Mental model: <T> ek placeholder hai type ke liye — jab function call hota hai, TypeScript khud dekh leta hai ki T is baar kya hai (array mein jo bhi type hai), aur poore function mein consistently wahi type use hoti hai. Tumhe har type ke liye alag function nahi banana padta, aur phir bhi type-safety poori milti hai (kyunki TS ko pata hai ki T ek fixed type hai, any nahi).
+
+T sirf ek naam hai — koi bhi letter/word chal sakta hai (T, Item, Data), lekin convention hai single capital letter (T) chhote generic functions ke liye.
+
+Tumhara task
+Ek generic function banao "getLast<T>" jo:
+- kisi bhi type ke array ko parameter le (arr: T[])
+- array ka last element return kare (return type T)
+
+Test karo teen tarah se:
+1. getLast([1, 2, 3])           → 3 aana chahiye
+2. getLast(["a", "b", "c"])     → "c" aana chahiye
+3. getLast(students)            → last student object aana chahiye
+
+Hint: array ka last index nikalne ka formula arr.length - 1 hota hai.
+
+## Null/Undefined Handling — sabse zyada real bugs isi se aate hain
+
+JS/TS mein data kabhi missing ho sakta hai — API se field na aaye, array khaali ho, user ne kuch fill na kiya ho. `undefined` (kabhi define hi nahi hua) aur `null` (jaanbujh kar "kuch nahi hai" bataya gaya) — dono "empty" values hain, lekin inhe access karne ki koshish karo toh app crash ho jaata hai:
+
+```typescript
+interface User {
+  name: string;
+  address?: { city: string };  // optional — ho bhi sakta hai, nahi bhi
+}
+
+let user: User = { name: "Ateeksh" };
+console.log(user.address.city); // 💥 CRASH — "Cannot read properties of undefined"
+```
+
+TypeScript yeh crash hone se pehle hi compile-time pe pakad lega **agar** field optional (`?`) declare kiya hai — but crash se bachne ke liye tumhe khud handle karna padega. Iske liye 3 tools hain:
+
+### 1. Simple `if` check (jo humne pehle kiya tha)
+```typescript
+if (user.address) {
+  console.log(user.address.city); // yahan safe hai, TS ko pata chal gaya address exist karta hai
+}
+```
+
+### 2. Optional Chaining `?.` — shortcut for nested checks
+```typescript
+console.log(user.address?.city); // agar address undefined hai, poora expression undefined ban jaata hai, crash nahi
+```
+Mental model: `?.` ka matlab hai "agar isse pehle wali cheez exist karti hai tabhi aage jao, warna turant ruk jao aur `undefined` de do." Chain mein kitni bhi lagaye ja sakti hain: `user.address?.city?.length`.
+
+**Fark `if` se:** `if` check karta hai aur decision leta hai (kuch action). `?.` sirf **crash rokta hai**, result `undefined` ban jaata hai — usko aage handle karna phir bhi tumhara kaam hai.
+
+### 3. Nullish Coalescing `??` — "agar yeh missing hai toh default use karo"
+```typescript
+let city = user.address?.city ?? "City not provided";
+console.log(city); // agar city undefined/null hai, "City not provided" print hoga
+```
+Mental model: `a ?? b` ka matlab "agar `a` null ya undefined hai, `b` use karo, warna `a` hi use karo."
+
+**Important gotcha — `??` vs `||` mein farak:**
+```typescript
+let marks = 0;
+let displayMarks = marks || "No marks"; // ❌ "No marks" print hoga! kyunki 0 ko JS "falsy" maanta hai
+let displayMarks2 = marks ?? "No marks"; // ✅ 0 hi print hoga — sahi behavior
+```
+`||` sirf value ki "truthiness" dekhta hai (0, "", false — sab falsy hain). `??` sirf **specifically** null/undefined check karta hai. Isliye numbers/booleans ke saath default value dete waqt hamesha `??` use karo, `||` nahi.
+
+---
+
+### Tumhara task
+
+```typescript
+interface Placeholder {
+  id: string;
+  label?: string;       // optional
+  boundSignature?: {    // optional
+    imageUrl: string;
+  };
+}
+
+let field1: Placeholder = { id: "p1", label: "Sign here", boundSignature: { imageUrl: "sig1.png" } };
+let field2: Placeholder = { id: "p2" }; // label aur boundSignature dono missing
+```
+
+Ek function `describeField` banao jo:
+- `field: Placeholder` parameter le, return type `string`
+- Agar `boundSignature` exist karta hai, return kare: `` `${field.id}: signed with sig1.png` `` (image url use karke)
+- Agar nahi, `??` use karke `field.label` ko fallback dedo default value `"Unlabeled field"` ke saath, aur return karo: `` `${field.id}: ${label}` ``
+
+`field1` aur `field2` dono ke saath call karke console.log se test karo. Optional chaining (`?.`) aur nullish coalescing (`??`) dono use karne ki koshish karo isme.
