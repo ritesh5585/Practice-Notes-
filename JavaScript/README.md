@@ -367,7 +367,17 @@ In JavaScript, `let`, `var`, and `const` are all keywords used to declare variab
 
 ### What is the event loop in JavaScript runtimes?
 
-The event loop is the host runtime's scheduling mechanism for coordinating JavaScript jobs, asynchronous operations, and—in browsers—rendering. A simplified browser turn works like this:
+The event loop is an important concept in JavaScript that enables asynchronous programming by handling tasks efficiently. Since JavaScript is single-threaded, it uses the event loop to manage the execution of multiple tasks without blocking the main thread.
+
+The event loop continuously checks whether the call stack is empty and whether there are pending tasks in the callback queue or microtask queue.
+
+Call Stack: JavaScript has a call stack where function execution is managed in a Last-In, First-Out (LIFO) order.
+Web APIs (or Background Tasks): These include setTimeout, setInterval, fetch, DOM events, and other non-blocking operations.
+Callback Queue (Task Queue): When an asynchronous operation is completed, its callback is pushed into the task queue.
+Microtask Queue: Promises (.then(), .catch(), .finally()) and other microtasks are placed here. The microtask queue is always fully executed (drained) before moving to the next macrotask.
+Event Loop: It continuously checks the call stack and, if empty, moves tasks from the queue to the stack for execution.
+
+ A simplified browser turn works like this:
 
 1. The host runs one task, such as initial script evaluation, a timer callback, or an input-event callback. Function calls made by that task use the JavaScript agent's call stack.
 2. Timers, networking, and other host APIs continue outside the currently executing JavaScript stack. When work becomes ready, the host queues a task or settles a promise, which queues its reactions as microtasks.
@@ -386,6 +396,12 @@ The event loop is the host runtime's scheduling mechanism for coordinating JavaS
 ### Explain event delegation in JavaScript
 
 Event delegation is a technique in JavaScript where a single event listener is attached to a parent element instead of attaching event listeners to multiple child elements. When an event occurs on a child element, the event bubbles up the DOM tree, and the parent element's event listener handles the event based on the target element.
+
+Event Delegation is a pattern used to handle events efficiently by attaching a single event listener to a parent element instead of adding listeners to multiple similar child elements, and then identifying the actual source of the event using the event.target property.
+
+Improves performance and memory usage.
+Uses event bubbling to capture events.
+Ideal for dynamically added elements.
 
 Event delegation provides the following benefits:
 
@@ -410,6 +426,8 @@ However, do note that:
 
 There's no simple explanation for `this`; it is one of the most confusing concepts in JavaScript because its behavior differs from many other programming languages. The one-liner explanation of the `this` keyword is that it is a dynamic reference to the context in which a function is executed.
 
+The this keyword in JavaScript dynamically refers to the object that is executing the current function. Its value changes based on how and where it is used, not where it is written.
+
 A longer explanation is that `this` follows these rules:
 
 1. If the `new` keyword is used when calling the function, meaning the function was used as a function constructor, the `this` inside the function is the newly-created object instance.
@@ -430,7 +448,7 @@ For an in-depth explanation, do check out [Arnav Aggrawal's article on Medium](h
 
 <br>
 
-### Describe the difference between a cookie, `sessionStorage` and `localStorage` in browsers
+### Describe the difference between a cookie, `sessionStorage` and `localStorage` in browsers 
 
 Cookies, `localStorage`, and `sessionStorage` all store data in the browser, but they differ in lifetime, scope, server interaction, and security controls. `localStorage` and `sessionStorage` implement the [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API).
 
