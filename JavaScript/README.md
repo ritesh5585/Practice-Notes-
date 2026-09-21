@@ -305,6 +305,10 @@ This list contains a longer list of important JavaScript questions. Not all of t
 - **Class declarations (`class`)**: The binding exists during scope setup but remains in the TDZ until the class declaration is evaluated.
 - **Import declarations (`import`)**: Imported bindings are linked before module evaluation. Dependencies normally evaluate before the importing module's body, although cycles can expose an uninitialized binding.
 
+what is diff between lexical scope hoisting and closure how this concept are diff from each other at the end they use similar concept
+
+Here is the direct answer: Lexical scope defines where variables are available based on your code's structure; hoisting is how those variables are made available before code execution; and a closure is how a function remembers those variables even after its parent scope has finished executing.
+
 The following behavior summarizes the result of accessing the variables before they are declared.
 
 | Declaration                    | Accessing before declaration |
@@ -517,6 +521,9 @@ Here's a table summarizing the 4 ways of loading `<script>`s in an HTML document
 <br>
 
 ### What's the difference between `.call` and `.apply` in JavaScript?
+
+Regular Functions (function) have dynamic this: The value of this is determined how the function is called at execution time. It can be dynamically changed using .call(), .apply(), or .bind().
+Arrow Functions (=>) have lexical this: Arrow functions do not have their own this binding. Instead, they permanently inherit this from the enclosing scope where they were created. You cannot change an arrow function's this context using .call(), .apply(), or .bind().
 
 `.call` and `.apply` are both used to invoke functions with a specific `this` context and arguments. The primary difference lies in how they accept arguments:
 
