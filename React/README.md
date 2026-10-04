@@ -1,16 +1,4 @@
 # React — The Complete Basics
-### Part 1 of 3 · "What does everything *mean*?"
-
-| File | Question it answers | Level |
-|---|---|---|
-| **01 — Basics (this file)** | What is each thing? Why does it exist? Tiny example. | Beginner → comfortable |
-| **02 — Intermediate: Connecting Everything** | How do the pieces fit? Where do problems appear? How do I fix them? Rendering, performance, flow. | Intermediate developer |
-| **03 — Senior: Internals** | What is React actually doing underneath, and why was it designed that way? | Engineer-level |
-
-> **How to read this file:** don't memorize. For each concept ask three things: **What is it? What problem does it solve? What breaks without it?** Everything in React is an answer to a problem someone actually had.
-
-> **Running example:** an Amazon-style store called E-Commerce. The code below is *illustrative*, not your actual project code.
-
 ---
 
 ## 0. React in two minutes
