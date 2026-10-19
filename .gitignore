@@ -2,6 +2,25 @@
 **/node_modules/
 **/jspm_packages/
 **/web_modules/
+**/.pnpm-store/
+**/.yarn/cache/
+**/.yarn/install-state.gz
+
+# Python environments and caches
+**/.venv/
+**/venv/
+**/env/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Java and build tooling
+**/target/
+**/.gradle/
+**/out/
+**/*.class
 
 # Build, generated, and coverage output
 **/dist/
@@ -47,6 +66,27 @@
 **/.pnp.*
 **/.langnostic
 **/*.tgz
+**/.turbo/
+**/.vercel/
+**/.vite/
+**/.cache-loader/
+
+# Temporary files and local databases
+**/*.tmp
+**/*.temp
+**/*.bak
+**/*.swp
+**/*.swo
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+
+# Docker and local infrastructure overrides
+**/docker-compose.override.yml
+**/docker-compose.override.yaml
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
 
 # Editors and operating systems
 **/.vscode/*
@@ -59,3 +99,10 @@
 **/*.njsproj
 **/*.sln
 **/*.sw?
+**/.history/
+**/.fleet/
+
+# OS metadata
+**/$RECYCLE.BIN/
+**/ehthumbs.db
+**/Desktop.ini
